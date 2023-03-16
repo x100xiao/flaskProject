@@ -20,7 +20,8 @@ USERNAME = "root"
 PASSWORD = "root"
 # MySQL上创建的数据库名称
 DATABASE = "apidata"
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DATABASE}?charset=utf8mb4"
+app.config[
+    'SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DATABASE}?charset=utf8mb4"
 # 是否追踪数据库修改，一般不开启, 会影响性能
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # 是否显示底层执行的SQL语句
@@ -28,6 +29,8 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+
 # flask db init 终端运行，只需要执行一次
 # flask db migrate 创建副本
 # flask db upgrade 提交到数据库
@@ -45,6 +48,8 @@ class User(db.Model):
     extension = db.relationship("UserExtension", back_populates="user", uselist=False)
 
     # articles = db.relationship("Article")
+
+
 # if __name__ == '__main__':
 #     db.create_all()
 #     app.run(debug=True)
@@ -98,6 +103,7 @@ class News(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     category = db.relationship("Category", back_populates="newses", cascade="expunge")
 
+
 # with app.app_context():
 #     db.create_all()
 
@@ -133,6 +139,7 @@ def user_fetch():
 
     return "数据提取成功！"
 
+
 @app.route("/user/filter")
 def user_filter():
     # 1. filter方法：
@@ -147,7 +154,6 @@ def user_filter():
     users = User.query.order_by(User.id)
 
     # 3.2. 倒序排序
-    from sqlalchemy import desc
     users = User.query.order_by(db.text("-id"))
     users = User.query.order_by(User.id.desc())
 
